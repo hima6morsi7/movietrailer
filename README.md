@@ -1,7 +1,3 @@
-# MoviePass
-A website for people who wants to find brief informations about movies.
-
-Demo - https://tanttran-moviepass.herokuapp.com/
-
-<img src="public/image/moviescreen1.png">
-<img src="public/image/moviescreen2.png"># movie-trailer
+movietrailer app to built with mean stack to watch trailer
+run in npm install in the base directory 
+run npm install then bower install in the public directory
