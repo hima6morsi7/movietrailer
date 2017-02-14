@@ -1,0 +1,454 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "movietrailer API",
+        "description": "**DEMO**\n\nThis is a simple backend for the Angular Demo \"movie trailer app\"\n\nSee .\n"
+    },
+    "basePath": "/",
+    "schemes": [
+        "https"
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "tags": [
+        {
+            "name": "movie trailer",
+            "description": "show upcoming movies"
+        }
+    ],
+    "paths": {
+        "/movies": {
+            "get": {
+                "tags": [
+                    "movie"
+                ],
+                "summary": "Get all new movies",
+                "responses": {
+                    "200": {
+                        "description": "List of all movies",
+                        "schema": {
+                            "title": "movies",
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/movie"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Unexpected Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/RestError"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "movie"
+                ],
+                "summary": "Resets store to initial state",
+                "responses": {
+                    "200": {
+                        "description": "All data is now on initial state"
+                    },
+                    "500": {
+                        "description": "Unexpected Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/RestError"
+                        }
+                    }
+                }
+            }
+        },
+        "/movies/search/{searchTerm}": {
+            "get": {
+                "tags": [
+                    "movie"
+                ],
+                "summary": "Get all movies matching the given search term (case insensitive). The properties isbn, title, actors (interpreted as ISO string), subtitle and description are evaluated for a match.",
+                "parameters": [
+                    {
+                        "name": "searchTerm",
+                        "in": "path",
+                        "type": "string",
+                        "description": "search term (treated case insensitive)",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of all movies matching the give search term",
+                        "schema": {
+                            "title": "movies",
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/movie"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Unexpected Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/RestError"
+                        }
+                    }
+                }
+            }
+        },
+        "/movie": {
+            "post": {
+                "tags": [
+                    "movie"
+                ],
+                "summary": "Creates a new movie",
+                "parameters": [
+                    {
+                        "name": "movie",
+                        "in": "body",
+                        "description": "A new movie to be stored",
+                        "schema": {
+                            "$ref": "#/upcoming"
+                        },
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "movie was created"
+                    },
+                    "400": {
+                        "description": "Invalid data",
+                        "schema": {
+                            "$ref": "#/definitions/RestError"
+                        }
+                    },
+                    "409": {
+                        "description": "movie does already exist",
+                        "schema": {
+                            "$ref": "#/definitions/RestError"
+                        }
+                    },
+                    "500": {
+                        "description": "Unexpected Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/RestError"
+                        }
+                    }
+                }
+            }
+        },
+        "/movie/{isbn}": {
+            "get": {
+                "tags": [
+                    "movie"
+                ],
+                "summary": "Returns a single movie by ISBN",
+                "parameters": [
+                    {
+                        "name": "isbn",
+                        "in": "path",
+                        "type": "string",
+                        "description": "ISBN of the movie",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns the movie with the requested ISBN",
+                        "schema": {
+                            "$ref": "#/definitions/movie"
+                        }
+                    },
+                    "404": {
+                        "description": "movie does not exist",
+                        "schema": {
+                            "$ref": "#/definitions/RestError"
+                        }
+                    },
+                    "500": {
+                        "description": "Unexpected Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/RestError"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "movie"
+                ],
+                "summary": "Updates an existing movie",
+                "description": "Requires a full movie entry, ISBN in query and body must match",
+                "parameters": [
+                    {
+                        "name": "isbn",
+                        "in": "path",
+                        "description": "ISBN of the movie to update",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "movie",
+                        "in": "body",
+                        "description": "An existing movie to update",
+                        "schema": {
+                            "$ref": "#/definitions/movie"
+                        },
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "movie was updated"
+                    },
+                    "400": {
+                        "description": "Invalid data",
+                        "schema": {
+                            "$ref": "#/definitions/RestError"
+                        }
+                    },
+                    "404": {
+                        "description": "movie does not exist",
+                        "schema": {
+                            "$ref": "#/definitions/RestError"
+                        }
+                    },
+                    "500": {
+                        "description": "Unexpected Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/RestError"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "movie"
+                ],
+                "summary": "Deletes a movie",
+                "parameters": [
+                    {
+                        "name": "isbn",
+                        "in": "path",
+                        "description": "ISBN of the movie to delete",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "movie was deleted or does not exist"
+                    },
+                    "500": {
+                        "description": "Unexpected Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/RestError"
+                        }
+                    }
+                }
+            }
+        },
+        "/movie/{isbn}/check": {
+            "get": {
+                "tags": [
+                    "movie"
+                ],
+                "summary": "Returns whether ISBN exists or not",
+                "parameters": [
+                    {
+                        "name": "isbn",
+                        "in": "path",
+                        "type": "string",
+                        "description": "ISBN of the movie",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns whether the ISBN exists in the database or not (boolean)"
+                    },
+                    "500": {
+                        "description": "Unexpected Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/RestError"
+                        }
+                    }
+                }
+            }
+        },
+        "/movie/{isbn}/rate": {
+            "post": {
+                "tags": [
+                    "movie"
+                ],
+                "summary": "Updates rating of a movie to a given value",
+                "parameters": [
+                    {
+                        "name": "isbn",
+                        "in": "path",
+                        "type": "string",
+                        "description": "ISBN of the movie",
+                        "required": true
+                    },
+                    {
+                        "name": "rating",
+                        "in": "body",
+                        "description": "The new rating value for the given movie",
+                        "schema": {
+                            "$ref": "#/definitions/Rating"
+                        },
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Rating has been updated"
+                    },
+                    "400": {
+                        "description": "Invalid data",
+                        "schema": {
+                            "$ref": "#/definitions/RestError"
+                        }
+                    },
+                    "404": {
+                        "description": "movie does not exist",
+                        "schema": {
+                            "$ref": "#/definitions/RestError"
+                        }
+                    },
+                    "500": {
+                        "description": "Unexpected Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/RestError"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "movie": {
+            "type": "object",
+            "description": "The main entity of this API",
+            "required": [
+                "isbn",
+                "title"
+            ],
+            "properties": {
+                "isbn": {
+                    "type": "string",
+                    "example": "9783864903571",
+                    "description": "ISBN, which is used as identifier - only numbers are allowed (no hyphens)"
+                },
+                "title": {
+                    "type": "string",
+                    "example": "Angular",
+                    "description": "Title of the movie"
+                },
+                "authors": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "List of all authors of the movie",
+                    "example": [
+                        "Gregor Woiwode",
+                        "Ferdinand Malcher",
+                        "Danny Koppenhagen",
+                        "Johannes Hoppe"
+                    ]
+                },
+                "subtitle": {
+                    "type": "string",
+                    "example": "Einstieg in die komponentenbasierte Entwicklung von Web- und Mobile-Anwendungen",
+                    "description": "Subtitle of the movie"
+                },
+                "rating": {
+                    "type": "integer",
+                    "format": "int32",
+                    "example": 4,
+                    "minimum": 1,
+                    "maximum": 5,
+                    "description": "Rating 'in starts' of the movie, from one star (bad) to five stars (great)"
+                },
+                "published": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2017-03-01T00:00:00.000Z",
+                    "description": "date-time as defined by RFC3339 (http://www.ietf.org/rfc/rfc3339.txt) - like new Date().toISOString();"
+                },
+                "description": {
+                    "type": "string",
+                    "example": "Mit diesem Buch arbeiten Sie sich durch Googles neuestes Framework und erstellen mit aktuellen Technologien moderne Webanwendungen. Lernen und vertiefen Sie die komponentenorientierte Entwicklung von Single-Page-Anwendungen. Neben den Grundlagen werden auch fortgeschrittene Konzepte von Angular am Beispiel erklärt.",
+                    "description": "Short description of the movie"
+                },
+                "thumbnails": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Thumbnail"
+                    },
+                    "description": "Images of the movie, which are used as thumbnails"
+                }
+            }
+        },
+        "Thumbnail": {
+            "type": "object",
+            "description": "Link to an image, which is used as a thumbnail",
+            "required": [
+                "url",
+                "title"
+            ],
+            "properties": {
+                "url": {
+                    "type": "string",
+                    "example": "https://ng-buch.de/cover2.jpg",
+                    "description": "Image to display"
+                },
+                "title": {
+                    "type": "string",
+                    "example": "Front Cover",
+                    "description": "Caption of the image"
+                }
+            }
+        },
+        "Rating": {
+            "type": "object",
+            "description": "An object with a rating value (1...5)",
+            "required": [
+                "rating"
+            ],
+            "properties": {
+                "rating": {
+                    "type": "integer",
+                    "format": "int32",
+                    "example": 4,
+                    "minimum": 1,
+                    "maximum": 5,
+                    "description": "Rating value for a movie from one star (bad) to five stars (great)"
+                }
+            }
+        },
+        "RestError": {
+            "type": "object",
+            "description": "object which is following the convention of restify, see http://restify.com/#resterror",
+            "required": [
+                "code"
+            ],
+            "properties": {
+                "code": {
+                    "type": "string",
+                    "description": "Short error code"
+                },
+                "message": {
+                    "type": "string",
+                    "description": "Detailed description of what went wrong"
+                }
+            }
+        }
+    }
+}
