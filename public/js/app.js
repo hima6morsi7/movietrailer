@@ -88,7 +88,7 @@ app.controller('mainController', ['$scope', '$http','$sce','AuthFactory', functi
     $scope.movieRating = function(title,rating1,user){
         $http({
          method: 'POST',
-         url: 'rating/'+rating1+'/:'+title'/:'+user ,
+         url: 'rating/:'+rating1+'/:'+title+'/:'+user ,
          headers: {'Content-Type': 'application/json'}
         }).then(function(response){
             console.log(response.data);
