@@ -27,6 +27,7 @@
     "morgan": "~1.6.1",
     "serve-favicon": "~2.3.0",
     "passport": "*",
+    "youtube-dl":"*",
     "passport-local-mongoose": "^4.0.0",
     "passport-local": "^1.0.0"  
   }
